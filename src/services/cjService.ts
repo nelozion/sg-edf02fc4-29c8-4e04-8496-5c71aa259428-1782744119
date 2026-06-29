@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 const CJ_API_BASE = "https://developers.cjdropshipping.com/api2.0/v1";
 
 interface CjCredentials {
+  id: string;
   api_key: string;
   access_token: string;
   expires_at: string;

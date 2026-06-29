@@ -33,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       cj_product_id: product.cj_product_id,
       ebay_sku: sku,
       ebay_offer_id: offerId,
+      title: product.title,
       current_price: product.suggested_ebay_price,
       current_quantity: 1,
       last_synced_at: new Date().toISOString(),
