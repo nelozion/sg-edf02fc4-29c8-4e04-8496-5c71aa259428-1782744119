@@ -1,23 +1,16 @@
 {
-  "framework": "nextjs",
-  "redirects": [
+  "crons": [
     {
-      "source": "/old-path",
-      "destination": "/new-path",
-      "permanent": true
-    }
-  ],
-  "headers": [
+      "path": "/api/cron/discover-products",
+      "schedule": "0 0 * * *"
+    },
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        }
-      ]
+      "path": "/api/cron/sync-orders",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-inventory",
+      "schedule": "*/10 * * * *"
     }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }
