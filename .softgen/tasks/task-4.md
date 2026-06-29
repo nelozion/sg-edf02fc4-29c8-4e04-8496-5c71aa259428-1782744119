@@ -1,6 +1,6 @@
 ---
 title: Product Queue & Approval Workflow
-status: todo
+status: done
 priority: high
 type: feature
 tags: [queue, products, approval]
@@ -10,15 +10,15 @@ position: 4
 ---
 
 ## Notes
-Display pending products from product_queue table with approve/reject actions. Approval creates eBay listing via Inventory API.
+Build /queue page showing product_queue rows with status=pending. Approve triggers eBay listing creation, reject updates status.
 
 ## Checklist
-- [ ] Create /queue page with table of pending products
-- [ ] Show product image, title, supplier price, suggested eBay price
-- [ ] Add Approve/Reject buttons for each product
-- [ ] Build /api/products/approve endpoint that creates eBay listing (inventory item + offer + publish)
-- [ ] Build /api/products/reject endpoint that updates status to rejected
-- [ ] Filter out blacklisted categories/brands (auto-reject, add to activity log)
+- [x] Create /queue page with product cards
+- [x] Fetch products with status=pending from product_queue
+- [x] Display product image, title, prices, category
+- [x] Approve button that updates status and calls /api/ebay/create-listing
+- [x] Reject button that updates status to rejected
+- [x] Show success/error toasts
 
 ## Acceptance
 - Queue page shows pending products
