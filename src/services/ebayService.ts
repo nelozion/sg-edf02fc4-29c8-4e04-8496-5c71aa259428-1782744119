@@ -48,7 +48,7 @@ export async function exchangeCodeForTokens(code: string): Promise<EbayTokens> {
     console.error("eBay token exchange failed:", response.status, errorBody);
     throw new Error(`Failed to exchange code for tokens: ${response.status} ${errorBody}`);
   }
-  }
+  
 
   const data = await response.json();
   const expiresAt = new Date(Date.now() + data.expires_in * 1000).toISOString();
