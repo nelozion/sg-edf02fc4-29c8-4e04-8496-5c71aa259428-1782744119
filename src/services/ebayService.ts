@@ -24,7 +24,12 @@ export async function getEbayAuthUrl(): Promise<string> {
 
 export async function exchangeCodeForTokens(code: string): Promise<EbayTokens> {
   const credentials = Buffer.from(`${EBAY_CLIENT_ID}:${EBAY_CLIENT_SECRET}`).toString("base64");
-  
+  console.log("Token exchange attempt:", {
+    env: EBAY_ENV,
+    authUrl: EBAY_AUTH_URL,
+    redirectUri: EBAY_REDIRECT_URI,
+    clientIdPrefix: EBAY_CLIENT_ID?.slice(0, 8),
+  });
   const response = await fetch(`${EBAY_AUTH_URL}/identity/v1/oauth2/token`, {
     method: "POST",
     headers: {
@@ -39,7 +44,10 @@ export async function exchangeCodeForTokens(code: string): Promise<EbayTokens> {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to exchange code for tokens");
+    const errorBody = await response.text();
+    console.error("eBay token exchange failed:", response.status, errorBody);
+    throw new Error(`Failed to exchange code for tokens: ${response.status} ${errorBody}`);
+  }
   }
 
   const data = await response.json();
