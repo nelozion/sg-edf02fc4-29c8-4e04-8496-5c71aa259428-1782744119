@@ -30,7 +30,7 @@ export async function exchangeCodeForTokens(code: string): Promise<EbayTokens> {
     redirectUri: EBAY_REDIRECT_URI,
     clientIdPrefix: EBAY_CLIENT_ID?.slice(0, 8),
   });
-  const response = await fetch(`${EBAY_AUTH_URL}/identity/v1/oauth2/token`, {
+  const response = await fetch(`${EBAY_BASE_URL}/identity/v1/oauth2/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -71,7 +71,7 @@ export async function refreshEbayToken(): Promise<string> {
 
   const credentials = Buffer.from(`${EBAY_CLIENT_ID}:${EBAY_CLIENT_SECRET}`).toString("base64");
   
-  const response = await fetch(`${EBAY_AUTH_URL}/identity/v1/oauth2/token`, {
+  const response = await fetch(`${EBAY_BASE_URL}/identity/v1/oauth2/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
