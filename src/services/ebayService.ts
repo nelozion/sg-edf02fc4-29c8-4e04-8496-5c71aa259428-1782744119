@@ -154,7 +154,21 @@ export async function createInventoryItem(sku: string, product: any, price: numb
     throw new Error(`Failed to create inventory item: ${error}`);
   }
 }
-
+async function getFirstPolicyId(accessToken: string, policyType: string): Promise<string> {
+  const response = await fetch(
+    `${EBAY_BASE_URL}/sell/account/v1/${policyType}?marketplace_id=EBAY_GB`,
+    {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept-Language": "en-US",
+      },
+    }
+  );
+  if (!response.ok) return "";
+  const data = await response.json();
+  const key = Object.keys(data).find(k => Array.isArray(data[k]));
+  return key ? data[key]?.[0]?.[`${policyType.replace("_policy", "")}PolicyId`] || "" : "";
+}
 export async function createOffer(sku: string, price: number) {
   const accessToken = await getValidAccessToken();
 
@@ -170,9 +184,9 @@ export async function createOffer(sku: string, price: number) {
       },
     },
     listingPolicies: {
-      fulfillmentPolicyId: "0",
-      paymentPolicyId: "0",
-      returnPolicyId: "0",
+      fulfillmentPolicyId: await getFirstPolicyId(accessToken, "fulfillment_policy"),
+      paymentPolicyId: await getFirstPolicyId(accessToken, "payment_policy"),
+      returnPolicyId: await getFirstPolicyId(accessToken, "return_policy"),
     },
   };
 
