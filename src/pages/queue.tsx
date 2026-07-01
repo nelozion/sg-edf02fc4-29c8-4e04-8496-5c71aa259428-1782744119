@@ -63,11 +63,15 @@ export default function QueuePage() {
 
       if (error) throw error;
 
-      await fetch("/api/ebay/create-listing", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
-      });
+     const token = localStorage.getItem("auth_token");
+await fetch("/api/ebay/create-listing", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+  },
+  body: JSON.stringify({ productId }),
+});
 
       toast({
         title: "Success",
