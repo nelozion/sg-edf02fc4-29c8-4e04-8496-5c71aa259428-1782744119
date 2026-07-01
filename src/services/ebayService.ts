@@ -169,12 +169,63 @@ async function getFirstPolicyId(accessToken: string, policyType: string): Promis
   const key = Object.keys(data).find(k => Array.isArray(data[k]));
   return key ? data[key]?.[0]?.[`${policyType.replace("_policy", "")}PolicyId`] || "" : "";
 }
+async function getFirstPolicyId(accessToken: string, policyType: string): Promise<string> {
+  const response = await fetch(
+    `${EBAY_BASE_URL}/sell/account/v1/${policyType}?marketplace_id=EBAY_GB`,
+    {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept-Language": "en-US",
+      },
+    }
+  );
+  if (!response.ok) return "";
+  const data = await response.json();
+  const key = Object.keys(data).find(k => Array.isArray(data[k]));
+  return key ? data[key]?.[0]?.[`${policyType.replace("_policy", "")}PolicyId`] || "" : "";
+}
+
 export async function createOffer(sku: string, price: number) {
   const accessToken = await getValidAccessToken();
-
+  const [fulfillmentPolicyId, paymentPolicyId, returnPolicyId] = await Promise.all([
+    getFirstPolicyId(accessToken, "fulfillment_policy"),
+    getFirstPolicyId(accessToken, "payment_policy"),
+    getFirstPolicyId(accessToken, "return_policy"),
+  ]);
   const offer = {
     sku,
     marketplaceId: "EBAY_GB",
+    format: "FIXED_PRICE",
+    availableQuantity: 1,
+    pricingSummary: {
+      price: {
+        value: price.toString(),
+        currency: "GBP",
+      },
+    },
+    listingPolicies: {
+      fulfillmentPolicyId,
+      paymentPolicyId,
+      returnPolicyId,
+    },
+  };
+  const response = await fetch(`${EBAY_BASE_URL}/sell/inventory/v1/offer`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+      "Accept-Language": "en-US",
+      "Content-Language": "en-US",
+    },
+    body: JSON.stringify(offer),
+  });
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Failed to create offer: ${error}`);
+  }
+  const data = await response.json();
+  return data.offerId;
+}
     format: "FIXED_PRICE",
     availableQuantity: 1,
     pricingSummary: {
