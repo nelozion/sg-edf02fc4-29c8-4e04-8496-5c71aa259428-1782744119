@@ -160,13 +160,13 @@ export async function createOffer(sku: string, price: number) {
 
   const offer = {
     sku,
-    marketplaceId: "EBAY_US",
+    marketplaceId: "EBAY_GB",
     format: "FIXED_PRICE",
     availableQuantity: 1,
     pricingSummary: {
       price: {
         value: price.toString(),
-        currency: "USD",
+        currency: "GBP",
       },
     },
     listingPolicies: {
@@ -295,7 +295,7 @@ export async function updateOfferPrice(offerId: string, price: number) {
       pricingSummary: {
         price: {
           value: price.toString(),
-          currency: "USD",
+          currency: "GBP",
         },
       },
     }),
