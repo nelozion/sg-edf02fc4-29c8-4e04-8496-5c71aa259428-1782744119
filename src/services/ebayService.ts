@@ -143,6 +143,8 @@ export async function createInventoryItem(sku: string, product: any, price: numb
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-Type": "application/json",
+      "Accept-Language": "en-US",
+      "Content-Language": "en-US",
     },
     body: JSON.stringify(inventoryItem),
   });
@@ -179,6 +181,8 @@ export async function createOffer(sku: string, price: number) {
     headers: {
       "Authorization": `Bearer ${accessToken}`,
       "Content-Type": "application/json",
+      "Accept-Language": "en-US",
+      "Content-Language": "en-US",
     },
     body: JSON.stringify(offer),
   });
