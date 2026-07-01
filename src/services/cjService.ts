@@ -56,27 +56,26 @@ async function refreshCjToken(creds: CjCredentials): Promise<string> {
 
 export async function getTrendingProducts(page: number = 1, pageSize: number = 20) {
   const accessToken = await getCjAccessToken();
-
-  const response = await fetch(`${CJ_API_BASE}/product/list`, {
-    method: "POST",
+  const params = new URLSearchParams({
+    pageNum: String(page),
+    pageSize: String(pageSize),
+  });
+  const response = await fetch(`${CJ_API_BASE}/product/list?${params.toString()}`, {
+    method: "GET",
     headers: {
-      "Content-Type": "application/json",
       "CJ-Access-Token": accessToken,
     },
-    body: JSON.stringify({
-      pageNum: page,
-      pageSize,
-      productType: 1,
-    }),
   });
-
   if (!response.ok) {
     throw new Error("Failed to fetch trending products");
   }
-
   const data = await response.json();
   return data.data?.list || [];
 }
+  
+ 
+
+
 
 export async function getProductDetail(productId: string) {
   const accessToken = await getCjAccessToken();
