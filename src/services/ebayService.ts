@@ -166,6 +166,26 @@ async function getFirstPolicyId(accessToken: string, policyType: string): Promis
   );
   if (!response.ok) return "";
   const data = await response.json();
+  if (policyType === "fulfillment_policy") {
+    return data.fulfillmentPolicies?.[0]?.fulfillmentPolicyId || "";
+  }
+  if (policyType === "payment_policy") {
+    return data.paymentPolicies?.[0]?.paymentPolicyId || "";
+  }
+  if (policyType === "return_policy") {
+    return data.returnPolicies?.[0]?.returnPolicyId || "";
+  }
+  return "";
+}
+    {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Accept-Language": "en-US",
+      },
+    }
+  );
+  if (!response.ok) return "";
+  const data = await response.json();
   const key = Object.keys(data).find(k => Array.isArray(data[k]));
   return key ? data[key]?.[0]?.[`${policyType.replace("_policy", "")}PolicyId`] || "" : "";
 }
